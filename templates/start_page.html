@@ -1,0 +1,141 @@
+<html>
+<head>
+<title> Welcome Page </title>
+<style>
+    body {background: #ffe26a; text-align :center; color: black}
+    table{color: black; margin: auto}
+    td   {text-align: center; padding: 10px; border: 1px solid black;background:orange}
+    th   {text-align: center; padding: 10px; border: 1px solid black;background:orange}
+    .paddingBetweenRows td{
+    padding:0 5px 0 5px;
+    border: 1px solid black;
+    }
+</style>
+</head>
+<body>
+<h1> Welcome </h1>
+
+{% if check %}
+
+<h1> Data added </h1>
+
+{% endif %}
+<form action = "/input_values", method = "post">
+<table>
+    <h1> ADD RECORD </h1>
+    <table class = "table">
+    <thread>
+        <tr>
+        <th> <h3>Label</h3></th>
+        <th> <h3>Field</h3></th>
+        </tr>
+    </thread>
+    <tbody>
+    <tr>
+    <td><h3>Exchange Name</h3></td>
+    <td> <input type = "text" name = "EXCHANGE_NAME"></input> </td>
+    </tr>
+    <tr>
+    <td><h3> Leverage</h3></td>
+    <td> <input type = "text" name = "LEVERAGE_VAL">         </input> </td>
+    </tr>
+    <tr>
+    <td><h3> Investment</h3></td>
+    <td> <input type = "text" name = "INVEST_VAL">         </input> </td>
+    </tr>
+    <tr>
+    <td><h3>COIN TYPE (TESTNET/REAL)</h3></td>
+    <td> <input type = "text" name = "COIN_TYPE">         </input> </td>
+    </tr>
+    <tr>
+    <td><h3> TAKE PROFIT</h3></td>
+    <td> <input type = "text" name = "TP">         </input> </td>
+    </tr>
+    <tr>
+    <td><h3> STOP LOSS</h3></td>
+    <td> <input type = "text" name = "SL">         </input> </td>
+    </tr>
+    <tr>
+    <td><h3> Platform (TradingView/Custom)</h3></td>
+    <td> <input type = "text" name = "PLATFORM"></input> </td>
+    </tr>
+    </tbody>
+</table>
+<input type = "submit" value="ADD RECORD">
+<h3>
+</form>
+<h1> Records Present </h1>
+<table class ='paddingBetweenRows'>
+  <tr>
+  <th><h3> Exchange Name </h3></th>
+  <th><h3> Leverage      </h3></th>
+  <th><h3> Investment    </h3></th>
+  <th><h3> COIN TYPE     </h3></th>
+  <th><h3> TAKE PROFIT   </h3></th>
+  <th><h3> STOP LOSS     </h3></th>
+  <th><h3> Platform      </h3></th>
+  <th><h3> Actions       </h3></th>
+  </tr>
+  {% for data in Data %}
+  <tr>
+  <td>{{data["Exchange"]}}  
+      <form action ={{data["edit_links"][1]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>{{data["Leverage"]}}
+      <form action ={{data["edit_links"][1]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>$ {{data["Investment"]}}
+      <form action ={{data["edit_links"][2]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>{{data["Coin_type"]}} 
+      <form action = {{data["edit_links"][3]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>{{data["Tp"]}}
+      <form action ={{data["edit_links"][4]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>{{data["Sl"]}}
+      <form action = {{data["edit_links"][5]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value= "EDIT">
+      </form>
+  </td>
+  <td>{{data["Platform"]}}
+      <form action = {{data["edit_links"][6]}}, method = "post">
+      <input type =   "text"  name   = "value"></input>
+      <input type =  "submit" value  = "EDIT">
+      </form>
+      <form action = {{data["start_link"]}}, method = "post">
+      <input type =  "submit"  value   = "START">
+      </form>
+      <form action = {{data["stop_link"]}}, method = "post">
+      <input type =  "submit"  value  = "STOP">
+      </form>
+  </td>
+  <td>
+  <form action = {{data["delete_link"]}}, method = "post">
+  <input type  =  "submit" value= "DELETE"></input>
+  </form>
+  </td>
+  </tr>
+  {%endfor%}
+ </table>
+
+</body>
+
+
+</html>
