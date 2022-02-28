@@ -4,7 +4,7 @@ def write_json(data, filename = ""):
     with open (filename, "w") as f:
         json.dump(data, f, indent = 4)
         
-with open("positions.json", "r") as f:
+with open("positions2.json", "r") as f:
     curr_positions = json.load(f)
 """
 exchanges = ccxt.exchanges 

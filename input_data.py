@@ -42,7 +42,7 @@ r = requests.post(url+"/submitdetails", json = d)
 # webhook url = http://127.0.0.1:8000/receive_signal
 """
 signal = {"auth_code"    :"myStrongPassword",
-          "symbol"       :"BTC/USDT:USDT",
+          "symbol"       :"ETH/USDT:USDT",
           "side"         :"BUY ",
           "trigger_price":3000}
 r = requests.post(url+"/receive_signal",json=signal)

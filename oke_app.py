@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Request, Form
+# Handle Excepetiions
+from fastapi.exceptions import HTTPException
 # Obtain Responses 
 from fastapi.responses  import HTMLResponse, RedirectResponse
 # To convert the json format to dictionary type 
@@ -87,14 +89,14 @@ def update_value(request:Request, number:str, field:str, value:str = Form(...)):
         if field=="Leverage":
             if input_data[int(number)]["Coin_type"] in curr_positions:
                 curr_positions[input_data[int(number)]["Coin_type"]] = {
-                        "symbol"     : value,
+                        "symbol"     : input_data[int(number)]["Coin_type"],
                         "side"       : curr_positions[input_data[int(number)]["Coin_type"]]["side"],
                         "quantity"   : float(value),
                         "price"      : curr_positions[input_data[int(number)]["Coin_type"]]["price"],
                         "total_price": float(value)*curr_positions[input_data[int(number)]["Coin_type"]]["price"],
                         "row_val"    : curr_positions[input_data[int(number)]["Coin_type"]]["row_val"]
                         }
-            write_json(curr_positions , filename = "positions2.json")
+                write_json(curr_positions , filename = "positions2.json")
     else:
         if field=="Coin_type":
             if input_data[int(number)][field] in curr_positions:
@@ -165,7 +167,7 @@ Signal format
  }
 """  
 @app.post("/receive_signal")
-def recive_signal(request:Request, signal:Signal):
+def recive_signal(signal:Signal):
     signal = jsonable_encoder(signal)
     if signal["auth_code"] == trading_view_password:
         #exchange      = signal["ticker"]
@@ -175,6 +177,7 @@ def recive_signal(request:Request, signal:Signal):
         #bot_details   = signal["strategy"]["bot_details"]
         leverage       = 0
         row_val        = -1
+        found          = False
         for j in range(len(input_data)):
             if (input_data[j]["Coin_type"] == coin_name):
                 leverage = float(input_data[j]["Leverage"])
@@ -186,16 +189,19 @@ def recive_signal(request:Request, signal:Signal):
                     "price"      : price,
                     "total_price": leverage*price,
                     "row_val"    : row_val}
+                print("FOund")
                 write_json(curr_positions , filename = "positions2.json")
-        print(curr_positions[coin_name])        
+                found = True
+        if(found == False): 
+            return HTTPException(401, 'Unauthorized')
+        #print(curr_positions[coin_name])        
         write_json(input_data     , filename = "input_data.json")        
         print("Start Trading")
         new_Bot = Bot(API_KEY, SECRET_KEY,curr_positions[coin_name])
         new_Bot.place_order()
+    else:
+        return HTTPException(401, 'Unauthorized')
         
-        curr_context = {"request" : request, "check"   : True, "Data"    : input_data}
-        return templates.TemplateResponse("start_page_1.html", context = curr_context)
-
 @app.post("/stop_all", response_class = RedirectResponse)
 def stop_complete(request:Request):
     curr_positions = {}
